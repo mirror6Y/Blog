@@ -1,86 +1,86 @@
-import React, { useState,Component } from 'react';
-import marked from 'marked'
-import hljs from "highlight.js";
-import { Row, Col, Input } from 'antd'
-import 'antd/dist/antd.css';
-import 'highlight.js/styles/monokai-sublime.css';
+import Autosaving from "./autosaving";
+import React from "react";
+import SimpleMDEReact from "react-simplemde-editor";
+import "easymde/dist/easymde.min.css";
 
-// const { TextArea } = Input
+let counter = 1;
 
-// class Markdown extends Component {
-
-
-
-//     render() {
-//         return (
-//             <div>
-                
-//             </div>
-//         );
-//     }
-// }
-
-// export default Markdown;
-const { TextArea } = Input;
-const layout = {
-    labelCol: {
-      span: 8,
-    },
-    wrapperCol: {
-      span: 16,
-    },
+class Markdown extends React.Component {
+  state = {
+    textValue1: "I am the initial value. Erase me, or try the button above.",
+    textValue2:
+      "Focus this text area and then use the Up and Down arrow keys to see the `extraKeys` prop in action"
   };
 
-function AddArticle() {
+  // extraKeys = () => {
+  //   return {
+  //     Up: function(cm) {
+  //       cm.replaceSelection(" surprise. ");
+  //     },
+  //     Down: function(cm) {
+  //       cm.replaceSelection(" surprise again! ");
+  //     }
+  //   };
+  // };
 
-  const [articleContent, setArticleContent] = useState('')  //markdown的编辑内容
-  const [markdownContent, setMarkdownContent] = useState('预览内容') //html内容
+  handleChange1 = value => {
+    this.setState({
+      textValue1: value
+    });
+  };
 
-  marked.setOptions({
-    renderer: new marked.Renderer(),
-    highlight: function (code) {
-      return hljs.highlightAuto(code).value;
-    },
-    gfm: true, // 允许 Git Hub标准的markdown.
-    pedantic: false, // 不纠正原始模型任何的不良行为和错误（默认为false）
-    sanitize: false, // 对输出进行过滤（清理），将忽略任何已经输入的html代码（标签）
-    tables: true, // 允许支持表格语法（该选项要求 gfm 为true）
-    breaks: false, // 允许回车换行（该选项要求 gfm 为true）
-    smartLists: true, // 使用比原生markdown更时髦的列表
-    smartypants: false, // 使用更为时髦的标点
-  })
+  // handleChange2 = value => {
+  //   this.setState({
+  //     textValue2: value
+  //   });
+  // };
 
-  const changeContent = (e) => {
-    setArticleContent(e.target.value)
-    let html = marked(e.target.value)
-    setMarkdownContent(html)
+  handleTextChange = () => {
+    this.setState({
+      textValue1: `Changing text by setting new state. ${counter++}`
+    });
+  };
+
+  render() {
+    return (
+      <div className="container container-narrow">
+        {/* <div className="page-header">
+          <h1>
+            <a href="https://github.com/RIP21/react-simplemde-editor">
+              react-simplemde-editor
+            </a>
+          </h1>
+          <p className="lead">
+            A React.js wrapper for{" "}
+            <a href="https://github.com/sparksuite/simplemde-markdown-editor">
+              simplemde-markdown-editor
+            </a>.
+          </p>
+        </div> */}
+        {/* <button
+          style={{ display: "inline-block", margin: "10px 0" }}
+          onClick={this.handleTextChange}
+        >
+          Click me to update the textValue outside of the editor
+        </button> */}
+        <SimpleMDEReact
+          className={""}
+          label="Markdown Editor"
+          value={this.state.textValue1}
+          onChange={this.handleChange1}
+        />
+        {/* <hr />
+        <SimpleMDEReact
+          value={this.state.textValue2}
+          onChange={this.handleChange2}
+          extraKeys={this.extraKeys()}
+        /> */}
+        {/* <hr />
+        <h4>Autosaves after refresh or sets default</h4>
+        <Autosaving id="demo" value="Initial value" /> */}
+      </div>
+    );
   }
-
-  return (
-    <div>
-      <Row>
-        <Col span={24}>
-          <br />
-          <Row >
-
-            <Col span={12}>
-              <TextArea 
-                className="markdown-content"
-                rows={35}
-                onChange={changeContent}
-                onPressEnter={changeContent}
-                placeholder="编辑内容"
-              />
-            </Col>
-
-            <Col span={12}>
-              <div className="show-html" dangerouslySetInnerHTML={{ __html: markdownContent }}></div>
-            </Col>
-          </Row>
-        </Col>
-      </Row>
-    </div>
-  )
 }
 
-export default AddArticle
+export default Markdown;
